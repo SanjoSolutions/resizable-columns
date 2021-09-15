@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resizable columns</title>
+<style>
+	body {
+		display: flex;
+		margin: 0;
+		padding: 0;
+		height: 100vh;
+		box-sizing: border-box;
+	}
+
+	@media (min-width: 768px) {
+		body {
+			padding: 0.5rem;
+		}
+	}
+
+	.sidebar {
+		background-color: black;
+		color: white;
+		box-sizing: border-box;
+	}
+
+	.sidebar.hidden-on-mobile {
+		width: 1.5rem;
+		height: 1.5rem;
+		margin-top: 0.5rem;
+		margin-left: 0.5rem;
+	}
+
+	@media (min-width: 768px) {
+		.sidebar.hidden-on-mobile {
+			width: 20rem;
+			height: auto;
+			margin-top: 0;
+			margin-left: 0;
+		}
+	}
+
+
+	.sidebar.visible-on-mobile {
+		width: 20rem;
+		padding: 1rem;
+	}
+
+	.separator {
+	  width: 3px;
+	  cursor: col-resize;
+	}
+
+	.main {
+		flex-grow: 1;
+		color: black;
+		box-sizing: border-box;
+		padding: 1rem;
+	}
+</style>
+</head>
+<body>
+<div class="sidebar hidden-on-mobile"></div>
+<div class="separator"></div>
+<div class="main"></div>
+<script>
+	const sidebar = document.querySelector('.sidebar')
+	sidebar.addEventListener('click', function (event) {
+		if (sidebar.classList.contains('hidden-on-mobile')) {
+			sidebar.classList.remove('hidden-on-mobile')
+			sidebar.classList.add('visible-on-mobile')
+		}
+		event.stopPropagation()
+	})
+
+	const body = document.body
+	body.addEventListener('click', function () {
+		if (sidebar.classList.contains('visible-on-mobile')) {
+			sidebar.classList.remove('visible-on-mobile')
+			sidebar.classList.add('hidden-on-mobile')
+		}
+	})
+
+  const sidebarBoundingClientRect = sidebar.getBoundingClientRect()
+	let isPointerDown = false
+	const separator = document.querySelector('.separator')
+	separator.addEventListener('pointerdown', function (event) {
+	  isPointerDown = true
+	})
+	window.addEventListener('pointermove', function (event) {
+	  if (isPointerDown) {
+      const x = event.clientX
+      const width = x - sidebarBoundingClientRect.x
+      sidebar.style.width = `${width}px`
+	  }
+	})
+	window.addEventListener('pointerup', function (event) {
+	  isPointerDown = false
+	})
+</script>
+</body>
+</html>
