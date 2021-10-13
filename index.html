@@ -85,6 +85,7 @@
 	let isPointerDown = false
 	const separator = document.querySelector('.separator')
 	separator.addEventListener('pointerdown', function (event) {
+	  event.preventDefault()
 	  isPointerDown = true
 	})
 	window.addEventListener('pointermove', function (event) {
